@@ -1,0 +1,173 @@
+---
+title: "Dumi_Research Report_1"
+author: "Dumi Yambira"
+date: "3/13/2020"
+output:html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set("Dumi_Research_Report_1.Rmd",echo = FALSE, tangle = TRUE)
+```
+
+```{r setup IIAG}
+IIAG <- read.csv(file = "2018_IIAG_ProcessedData.csv")
+header = TRUE
+na.strings = "."
+
+```
+
+# 1 INTRODUCTION AND CONCEPT FORMATION
+## **Electoral freeness index**
+
+The author wants to find out the extent to which African countries observe the freeness of political expression during electoral periods. Electoral periods are a sensitive time in African democracy hence the objective is to measure how free the elections are during the electoral process. Hence electoral freeness in defined by political freedom of expression. Since elections are measured/ classified by three aspects, FREE, FAIR AND CREDIBLE. The authors index proposes to tackle the FREE part of the electoral process in regards to the political environment. The paper defines Electoral freeness as the ability to identify or voice out your political views without being intimidated, arrested, marginalized. Hence ones rights should not be violated or intimidated during the electoral process. In a country that proclaims to be democratic as the majority of African countries claim to be, political expression should not be suppresed. The objective is that, if a country is recognized as failing the Electoral Freeness index then there`s probability that the electoral processs was/will not be democratic, neither will it pass the mark of being classified as fair or credible.
+
+## 2 **Component Measures**
+### *Measure explanation*
+The measure, "Absence of Judicial Corruption" is included because the paper suggests that the absence of corruption in the judiciary system increseases accountability and law enforcement mechanisms. Hence the freedom in political expression during elections is necessary because it gives one confidence to express their political views. Since Electoral freeness can be jeopardized by intimidation and violence from youth militia or state agents, determining the absence of Judicial corruption gives the paper suffcient data to understand how incumbent government during elections take accountability seriously. A low score determines that there is higher corruption which might relate to intimidation during the electoral period. 
+
+The next measure is the "Political Participation" variable. For elections to be considered as free, the political participation has to be liberal and the political space has to be conducive for every individual to express themselves. This variable encompasses political participation in various dimensions, media, socially even academically. Countries where the sample gives a high score would be considered as having a politically free environment during electoral period
+
+The following variable is "Freedom of Political Parties" variable. In the report, the expectations are that this variable and the "Political Participation" should give a high correlation because both are in the participation category and they contain observations in the political framework. The Freedom of political parties in areas of gathering, electoral campaign without intimidation enshrines the core of democratic elections in any given country. Hence countries that produce a high score should correlate with the scores of the latter variable. 
+
+Lastly, the "Freedom of Expression" variable is being used because it is linked with an individual`s human right. This variable is rooted in the constitution of the majority of African countries.Hence this paper belives that this variable correlates with the others. By measuring freedom of expression the expectation is to assess the fundamental of this democratic princple in African countries. Thus, if a country scores low,there is a high probability that the elections in that given year was not free, hence it would have failed on the electoral index.
+
+*  Create a vector containing all the variables then I will use the stargazer function to come up with a table of descriptive statistics
+```{r results ="asis", echo=TRUE}
+ElectionFree <- data.frame(IIAG$AbsJudCorrVDEM, IIAG$PolParEIU, IIAG$FreePolPartiesVDEM, IIAG$FreeExpBS)
+
+### Use stargazer to come up with a table of descriptive statistics
+library(stargazer)
+stargazer(ElectionFree [,c("IIAG.AbsJudCorrVDEM","IIAG.PolParEIU",
+                           "IIAG.FreeExpBS","IIAG.FreePolPartiesVDEM")], 
+                          type = "text", align = TRUE, float = FALSE) ### Use stargazer function to come up with descriptive statistics                                                                            table
+```
+
+* Error in command. Convert the variables from character to numeric for easy calculation of my data. This will allow me to come up with   a table of descriptive statistics as my data will be in numeric form, so coercion of the character variables is the best way. 
+```{r, echo=TRUE}
+
+sapply(ElectionFree, class)
+ElectionFree$IIAG.PolParEIU <- as.numeric(as.character(ElectionFree$IIAG.PolParEIU))
+ElectionFree$IIAG.FreeExpBS <- as.numeric(as.character(ElectionFree$IIAG.FreeExpBS))
+ElectionFree$IIAG.FreePolPartiesVDEM <- as.numeric(as.character(ElectionFree$IIAG.FreePolPartiesVDEM))
+ElectionFree$IIAG.AbsJudCorrVDEM <- as.numeric(as.character(ElectionFree$IIAG.AbsJudCorrVDEM))
+```
+
+Verify again if the variables are numeric from the dataframe and if they are, then I will use the stargzaer function for my descriptive statistics table
+``` {r, echo= TRUE}
+sapply(ElectionFree, class)
+```
+
+``` {r, stargazer correlation, echo= TRUE}
+### Now that variables are numeric, extract the correlation from the command
+stargazer(cor(ElectionFree[, c("IIAG.AbsJudCorrVDEM", "IIAG.PolParEIU",
+                               "IIAG.FreeExpBS","IIAG.FreePolPartiesVDEM")],
+                                use = "complete.obs"), type ="text")
+```
+
+## **3 Constructing the index**
+### *Index construction*
+To create a component measure into a common scale, the paper proposes to use the histogram method of each measure so as to determine the distributions, separately. The aim is to see whether the univariate distributions are skewed or symmetrical. Further comments will be generated on each measure. The measurement uses ordinal data, were the lowest grade projects less confidence and the highest grade project confidence in the criteria presented.
+
+ **Absence of Judical Corruption**
+``` {r, Absence of Judicial Corruption measurement, echo = TRUE}
+### Create a graph that will bring out the density of the variable
+hist(ElectionFree$IIAG.AbsJudCorrVDEM, probability = TRUE)
+```
+
+The graph is a random distribution. Hence it suggests that the majority of the observations lie between 1.5 - 1.7 from the variable. This means the majority of the sample population were confident that the absence of judicial corruption in their countries was minimal. This suggests that the majority were less confident in perceiving that Judicial corruption was absent in their countries.
+
+**Political Participation**
+```{r, Political Partipaction, echo= TRUE}
+### Convert this variable to histogram inorder to determine the distributions of the component measurement
+hist(ElectionFree$IIAG.PolParEIU, probability = TRUE)
+```
+
+In this graph, the density of the distributions can classify the histogram as bimodial. This is because the range of distributions are located in the middle. Nevertheless, the density coming from two diifferent ranges, 30-40 & 50-60 can lead the paper to conclude that, with the differences of the political systems in Africa, those between the ranges 30-40 might be the participants who are situated from countries were there is autocratic rule. Likewise, those between 50-60 might be those who come from liberal countries within the African continent.  
+
+**Freedom of Political Parties**
+```{r,Freedom of Poltical Parties, echo= TRUE}
+### Check component measure of this variable and convert to histogram
+hist(ElectionFree$IIAG.FreePolPartiesVDEM, probability = TRUE)
+```
+
+This histogram is suggested to be left skewed. This indicates that more of the respondents were located within the range of 0.6-1.0 of the FreePol variable. This brings out that from the sample, the majority viewed that the Political Parties in their respective countries have freedom.For the reason that the graph is highly skewed to the left, the paper recommends that it be transformed so as to produce an output that will be more symmetrical. 
+
+```{r, Transfrom the Freedom of Political Parties variable, echo= TRUE}
+### Transform the measurement using the log transformation
+hist(log(ElectionFree$IIAG.FreePolPartiesVDEM), probability = TRUE)
+```
+
+The graph could not produce a symmetrical output.This suggests that this graph remains skewed to the left. This suggests that the there is a perception that political parties have freedom in their countries. Though I had a preconceived idea that the freedom of parties was somewhat limited.  
+
+**Freedom of Expression**
+```{r, Freedom of Expression, echo= TRUE}
+### Convert the measurement of the variable to Histogram so as to determine the distributions
+hist(ElectionFree$IIAG.FreeExpBS, probability = TRUE)
+```
+
+The graph is random. This suggests that there is a perception that there is freedom of expression and considering this survey was taken on the African continent, this comprises the view of citizens who are liberal and conservative.
+
+### Scaling
+I will use the mean of every variable to make my analysis
+
+**Absence of Judicial Corruption**
+```{r, Scaling- Absence of Judicial Corruption, echo= TRUE}
+### Use summary function to get the min and max values
+summary(ElectionFree$IIAG.AbsJudCorrVDEM, na.rm= TRUE)
+
+### Use the min-max scale to get the index for this variable
+ElectionFree$Judicial_Index <- (ElectionFree$IIAG.AbsJudCorrVDEM - 0.60) / (3.6 - 0.6)
+summary(ElectionFree$Judicial_Index)
+```
+The scale scored low. This suggests that the democratic space is quite limited in African political systems. It also suggests that countries have more of an autocratic system as compared to a democratic system.
+
+**Political Participation**
+```{r, scaling- IIAG.PolParEIU, echo= TRUE}
+### Use summary function to get the min and max values
+summary(ElectionFree$IIAG.PolParEIU, na.rm =TRUE)
+
+### Use the min-max scale to extract the values and create and index for this variable
+ElectionFree$Pol_index <- (ElectionFree$IIAG.PolParEIU - 0) / (100 - 0)
+summary(ElectionFree$Pol_index)
+```
+The scale scored low. This suggests that on the African continent, instead of Absence of judicial corruption, there is still a presence of judicial corruption that presides in the countries.
+
+**Freedom of Political Parties**
+```{r, scaling- Freedom of Political Parties, echo= TRUE}
+### Use summary function to get the min and max values
+summary(ElectionFree$IIAG.FreePolPartiesVDEM, na.rm= TRUE)
+
+### Use the min-max scales to create an index for this measurement
+ElectionFree$PolParties_index <- (ElectionFree$IIAG.FreePolPartiesVDEM - 0) / (0.90 - 0)
+summary(ElectionFree$PolParties_index)
+```
+The scale is quite high, which indicates a good perception on this variable. Though what surprises me is, if the score of the Political Participation is low, how come this score is high?. This is a measurement that will need to be further analyzed. Before the univariate analysis, my expectation was that, there would be a strong correlation between these two variables.
+
+**Freedom of Expression**
+```{r, scaling- Freedom of Expression, echo= TRUE}
+### Use summary function to get the min and max values
+summary(ElectionFree$IIAG.FreeExpBS, na.rm= TRUE)
+
+### Use the min-max scales to create an index for this measurement
+ElectionFree$Expression_Index <- (ElectionFree$IIAG.FreeExpBS - 1) / (9.0 - 1.0)
+summary(ElectionFree$Expression_Index)
+```
+The scale is high, indicating it as good. This suggests that from a civil perspective, people are free to express their views. Though in the future, what needs further analysis is that, is this expression via, social media, traditional media or in person (face to face).
+
+**Arithmetic Mean**
+```{r, determining the Arithmetic mean, echo= TRUE}
+### Combine the values of the indexes from the variables inorder to come up with an Arithmetic mean
+ElectionFree_Index <- mean(ElectionFree$Pol_index + ElectionFree$PolParties_index + ElectionFree$Expression_Index + ElectionFree$Judicial_Index, na.rm = TRUE)
+ElectionFree_Index
+```
+
+## CONCLUSION
+
+In the report, the aim was to create an Electoral Freeness Index. Hence I used these variables: 
+
+ *  Absence of Judicial Corruption 
+ *  Political Participation        
+ *  Freedom of Political Parties   
+ *  Freedom of Expression
+
+I believed these variables correlated and I used them because they are politically aligned. Hence in light of this, the Absence of Judicial Corruption correlation surprised me when it indicated a low correlation with Freedom of political parties and Freedom of expression. Whereas from the correlation table, the other variables excluding Absence of Judicial Corruption had a high correlation with each other. Thus in addition to the latter point, my surprise came when the table indicated the highest correlation between the Freedom of Expression variable and Freedom of Political Parties variable which is 0.67. In regards to the correlation table, Absence of juidical corruption is a variable lined to the judicial framework rather than the political framework, that`s why it gave an average of low correlations with the other variables, which are more on the civil and political side. In terms of the graphs, the Freedom of Political Parties surprised me because with my perception from the media, I had a preconceived idea that the outcome would be a perception that there is no Freedom of Political Parties. Nevertheless, I still suggest that a correction that can be made in the future is breaking down the word "Freedom", from my perspective, it appears to be a multi-dimensional term. Hence Freedom can be classified in various categories, freedom to register, freedom to hold rallies these are dilemnas that will need to be dealt with in the future. Improvement that needs to be done is, come up with a rating scale for the arithmetic mean and when now doing this on a country basis, it becomes easy to categorize based on the ordinal data generated prior.  
